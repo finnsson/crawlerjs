@@ -8,6 +8,9 @@ static HTML-sites in a `_escaped_fragment_`-directory.
 Search bots does not implement modern HTML, CSS and JavaScript. Thus we need to give these bots a helping hand
 and generate static snapshots of our sites.
 
+Google describes the technique at
+[Making AJAX Applications Crawlable](https://developers.google.com/webmasters/ajax-crawling/).
+
 ## API
 
 Run
@@ -30,3 +33,17 @@ Crawler.js will visit the page, wait for it to render, and then
 
 Crawler.js will only visit the pages that are inside the page you supplied as the start argument to crawler.js.
 
+## Configure Apache
+
+Create a file `.htaccess` in the same folder as your AJAX-site (where you should store your escaped fragments)
+and add these lines
+
+    RewriteEngine On
+
+    RewriteCond %{QUERY_STRING} ^_escaped_fragment_=$
+    RewriteRule ^(.*)$ _escaped_fragment_$1/index.html? [L]
+
+    RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
+    RewriteRule ^(.*)$ _escaped_fragment_$1/%1/index.html? [L]
+
+to the file. It will redirect all URLs with the parameter `_escaped_fragment_` to the corresponding web site.
