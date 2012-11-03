@@ -14,7 +14,7 @@
     var ignorePatterns = [];
 
     if (args[index] === '-i' || args[index] === '--ignore') {
-        ignorePatterns.push(args[1]);
+        ignorePatterns.push(args[index + 1]);
         index += 2;
     }
     // Fetch the URL from the argument list
@@ -121,7 +121,7 @@
                         // make sure URL isn't in pages-array already
                         if (!_.contains(pages, href)) {
                             // check if the URL should be ignored
-                            if (!_.any(ignorePatterns, function (pattern) {
+                            if (! _.any(ignorePatterns, function (pattern) {
                                 return href.match(pattern) != null;
                             })) {
                                 // if not: add to pages-array and notVisitedPages
