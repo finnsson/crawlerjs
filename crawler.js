@@ -67,6 +67,8 @@
     phantom.injectJs('underscore-min.js');
 
 
+    // ### removeA
+    //
     // Helper method for removing an item from an array
     // Used like
     //
@@ -81,6 +83,17 @@
             }
         }
         return arr;
+    }
+
+    // ### encodeForBot
+    //
+    // Helper method for encoding characters that Google Bot (and Bing, etc) encode in the
+    // fragment ID before making the ^?_escaped_fragment_=`-request.
+    //
+    //     & -> %26
+    //
+    function encodeForBot(url) {
+        return url.replace(/&/g, '%26');
     }
 
 
@@ -169,7 +182,7 @@
 
             // * Remove script- and link-tags from the page.
             $('script', htmlTag).remove();
-            $('link', htmlTag).remove();
+            //$('link', htmlTag).remove();
 
             // Return the HTML content in the cleaned up HTML site as a string
             return htmlTag[0].innerHTML
@@ -198,7 +211,7 @@
         fs.makeTree(totalFolderName);
 
         // create file index.html in folder with the content `compactHtml`
-        fs.write(totalFolderName + fs.separator + 'index.html', compactHtml, 'w');
+        fs.write(encodeForBot(totalFolderName) + fs.separator + 'index.html', compactHtml, 'w');
 
         removeA(notVisitedPages, url);
         visitingPages--;
